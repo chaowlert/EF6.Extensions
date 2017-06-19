@@ -1,8 +1,6 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure.Interception;
-using System.Text.RegularExpressions;
 
 namespace EF6.Extensions
 {
@@ -36,8 +34,7 @@ namespace EF6.Extensions
                 if (parameter.DbType != DbType.String)
                     continue;
                 var value = parameter.Value as string;
-                if (value == null ||
-                    (!value.StartsWith("$.") && !value.Contains("'")))
+                if (value == null || !value.StartsWith("$.") || value.Contains("'"))
                     continue;
 
                 cmd.CommandText = cmd.CommandText.Replace($"@{parameter.ParameterName})", $"'{value}')");

@@ -53,6 +53,9 @@
   <ItemGroup>
     <Compile Include="AzureConfiguration.cs" />
     <Compile Include="BuiltInFunctions.cs" />
+    <Compile Include="FullTextSearch.cs" />
+    <Compile Include="FullTextSearch.partial.cs" />
+    <Compile Include="FullTextSearchInterceptor.cs" />
     <Compile Include="JsonPathInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaAwareMigrationSqlGenerator.cs" />

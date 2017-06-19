@@ -17,14 +17,8 @@ namespace EF6.Extensions
 
         public static bool SuspendExecutionStrategy
         {
-            get
-            {
-                return (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
-            }
-            set
-            {
-                CallContext.LogicalSetData("SuspendExecutionStrategy", value);
-            }
+            get => (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
+            set => CallContext.LogicalSetData("SuspendExecutionStrategy", value);
         }
     }
 }
