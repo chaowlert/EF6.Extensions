@@ -12,5 +12,7 @@ namespace EF6.Extensions
 
         [Function(FunctionType.BuiltInFunction, "JSON_VALUE")]
         public static string JsonValue(string str, string path) => Function.CallNotSupported<string>();
+
+        public static int Compare(byte[] source, byte[] target) => Function.CallNotSupported<int>();
     }
 }
