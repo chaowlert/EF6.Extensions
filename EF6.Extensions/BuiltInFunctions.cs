@@ -8,7 +8,7 @@ namespace EF6.Extensions
         public static string Format(decimal value, string format) => Function.CallNotSupported<string>();
 
         [Function(FunctionType.BuiltInFunction, "CONTAINS")]
-        public static bool Contains(string value, string pattern) => Function.CallNotSupported<bool>();
+        public static bool Contains(string value, string pattern, int lang) => Function.CallNotSupported<bool>();
 
         [Function(FunctionType.BuiltInFunction, "ISNUMERIC")]
         public static bool IsNumeric(string value) => Function.CallNotSupported<bool>();

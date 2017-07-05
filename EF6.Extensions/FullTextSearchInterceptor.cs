@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure.Interception;
 using System.Text.RegularExpressions;
@@ -19,7 +20,7 @@ namespace EF6.Extensions
 
         public FullTextSearchInterceptor(string prefix = "fulltext:", FullTextParseOption option = FullTextParseOption.ParseAsPrefix)
         {
-            _prefix = '%' + prefix;
+            _prefix = prefix;
             _option = option;
         }
 
@@ -51,18 +52,22 @@ namespace EF6.Extensions
                 if (parameter.DbType != DbType.String)
                     continue;
                 var value = parameter.Value as string;
-                if (value == null || !value.StartsWith(_prefix))
+                if (value == null || !value.StartsWith(_prefix, StringComparison.Ordinal))
                     continue;
 
                 var oldText = cmd.CommandText;
                 cmd.CommandText = Regex.Replace(oldText,
-                    $@"\[(\w+)\].\[(\w+)\]\s+LIKE\s+@{parameter.ParameterName}(?:\s*ESCAPE N?'~')?",
-                    $@"contains([$1].[$2], @{parameter.ParameterName})");
+                    $@"\(?CONTAINS\((\[\w+\]\.\[\w+\]),\s*@{parameter.ParameterName}(?:,\s*(@\w+|\d+)?)\)\)?\s*=\s*1",
+                    match =>
+                    {
+                        var lang = match.Groups[2].Success ? ", LANGUAGE " + match.Groups[2].Value : "";
+                        return $"CONTAINS({match.Groups[1].Value}, @{parameter.ParameterName}{lang})";
+                    });
                 if (oldText != cmd.CommandText)
                 {
                     parameter.Size = 4000;
                     var len = _prefix.Length;
-                    var exp = value.Substring(len, value.Length - len - 1);
+                    var exp = value.Substring(len, value.Length - len);
                     if (_option != FullTextParseOption.NoParse)
                     {
                         if (_option == FullTextParseOption.ParseAsPrefix)
